@@ -20,41 +20,71 @@ public class Game {
 	
 	public Game(){
 		scanner = new Scanner( System.in );
+		
+		//Faz o pre jogo, pegando o nome do jogador 
+		// Do the pre game, retrieve the player name
 		this.preGame();
+		
+
+		//Gera o tabuleiro
+		// Generate the table
 		this.generateTable();
+
+		//Inicia o jogo 
+		// Starts the game		
 		this.run();
 	}
 		
 	
 	public static void main( String[] args ) {
+		//Começa um novo jogo - Starts a new game
 		new Game();
 	}	
 
 	private void run() {
+		//Inicia as variaveis 
+		// Init the variables 
 		this.plays = new Player[table.getRows()][table.getRows()];
 		this.filled = new boolean[table.getRows()][table.getRows()];
+		this.players = new Player[2];
 		
+		//Inicia todas as posições como nao preenchidas 
+		// Starts all the positions as not filled
 		for( int i = 0; i < table.getRows(); i++ ) {
 			for( int j = 0; j < table.getCols(); j++ ) {
 				filled[i][j] = false;
 			}
 		}
 		
-		
+		//Renderiza o tabuleiro no console
+		//Render the table in console
 		this.table.render( this );
+		
+		//Aleatoriamente seleciona um jogador para iniciar
+		//Randomly select a player to start 
 		int x = (int) Math.round( Math.random() );
 		currentPlayer = players[x];
+		
+		//Faz o primeiro jogador jogar
+		//Make the first player play
 		currentPlayer.play( this );
 	}
 	
 	
 	
 	private void preGame() {
+
+		//Pega o nome do usuario e instancia um Player com este nome;
+		//Get the user name and instantiate a Player with this name;
 		System.out.println( "Digite seu nome" );
 		String name = scanner.nextLine();
-		this.players = new Player[2];
 		this.players[0] = new HumanPlayer( name );
+		
+		//Escolher a dificuldade;
+		//Choose the difficulty;
 		this.chooseDifficulty();
+		
+		
 		System.out.println( "Voce é o X" );
 	}
 	
@@ -62,6 +92,8 @@ public class Game {
 	
 	private void chooseDifficulty() {
 
+		//Escolher a dificuldade;
+		//Choose the difficulty;
 		System.out.println( "Escolha a dificuldade: A, B, ou C." );
 		String difficulty = scanner.next();
 
@@ -86,32 +118,46 @@ public class Game {
 	}
 	
 	
-	
 	private void generateTable() {
 		table = new Table();
 	}
 	
 	
-	
 	public void Next(){
+		//Renderiza o tabuleiro no console
+		//Render the table in console
 		this.table.render( this );
-		if( this.checkWinner() ) {
+		
+		//Verifica um resultado
+		//Check for a result
+		if( this.checkWinner() ) { 
+			//Se venceu
+			//If is a Win
 			this.winner( currentPlayer );
 		}else if( isADraw() ){
+			//Se Empatou
+			//if is a draw
 			System.out.println("Empatou");
+			System.exit(0);
 		}else {
+			//Muda para o proximo jogador;
+			//Change to next player;
 			if( currentPlayer.equals( players[0] ) ) {
 				currentPlayer = players[1];
 			}else {
 				currentPlayer = players[0];
 			}
+			
+			//Faz o jogar jogar
+			//Make the player play
 			currentPlayer.play( this );
 		}
 	}
 	
 	
 	public boolean checkWinner() {
-		
+		//Verifica se ha vencedor
+		//Check if has a winner
 		for( int i = 0; i < players.length; i++ ) {
 			boolean isWinner = winnerCollumns( players[i] );
 			if( isWinner ) return isWinner;
@@ -128,6 +174,8 @@ public class Game {
 	
 	
 	public boolean winnerDiagonals( Player p ) {
+		//Verifica se ha vencedor nas diagonais
+		//Check if has a winner in the diagonals
 		if(
 			p.equals( plays[0][0] ) &&
 			p.equals( plays[1][1] ) &&
@@ -144,6 +192,8 @@ public class Game {
 	}
 	
 	public boolean winnerCollumns( Player p ) {
+		//Verifica se ha vencedor nas colunas
+		//Check if has a winner in the collumns
 		for( int r = 0; r < table.getRows(); r++ ) {
 			boolean hasDiferent = false;
 			for( int c = 0; c < table.getCols(); c++ ) {
@@ -155,6 +205,8 @@ public class Game {
 	}
 	
 	public boolean winnerRows( Player p ) {
+		//Verifica se ha vencedor nas linhas
+		//Check if has a winner in the rows
 		for( int r = 0; r < table.getRows(); r++ ) {
 			boolean hasDiferent = false;
 			for( int c = 0; c < table.getCols(); c++ ) {
@@ -168,7 +220,8 @@ public class Game {
 	
 	
 	public boolean isADraw() {
-		
+		//Verifica se é um empate
+		//Check if are a draw
 		boolean finded = false;
 		for( int i = 0; i < table.getRows(); i++ ) {
 			for( int j = 0; j < table.getCols(); j++ ) {
@@ -183,6 +236,8 @@ public class Game {
 	
 	
 	public void winner( Player p ){
+		//Mostra mensagem de vencedor
+		//Show winners message
 		System.out.println( "Vencedor : " + p.getName() );
 		System.exit(0);
 	}
@@ -190,26 +245,38 @@ public class Game {
 	
 	
 	public Table getTable() {
+		//Pega o tabuleiro
+		//Retrieve the table
 		return this.table;
 	}
 	
 	
 	
 	public Player[][] getPlays(){
+		//Pega as jogadas
+		//Retrieve the plays
 		return this.plays;
 	}
 	
+	
+	
 	public Player[] getPlayers(){
+		//Pega as jogadores
+		//Retrieve the players
 		return this.players;
 	}
 	
 	public boolean canSetPlay( int row, int col ) {
+		//Verifica se a posição esta vazia
+		//Check if the position are empty
 		return !this.filled[row][col];
 	}
 	
 	
 	
 	public void setPlay( int row, int col, Player p ) {
+		//Faz a jogada e marca nas respectivas variaveis
+		//Do the play and mark the variables
 		this.filled[row][col] = true;
 		this.plays[row][col] = p;
 	}

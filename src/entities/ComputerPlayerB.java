@@ -2,17 +2,16 @@ package entities;
 
 import game.Game;
 
-public class ComputerPlayerB extends Player{
+public class ComputerPlayerB extends ComputerPlayer{
 	
-	private char mark = 'O';
-
 	public ComputerPlayerB(String name) {
 		super(name);
 	}
 	
-	
 	@Override
 	public void play( Game game ) {
+		//Preenche randomicamente a primeira posição vazia  
+		//Randomly Fill the first empty position
 		int col = (int)(Math.random() * (2 - 0 + 1) + 0);
 		int row = (int)(Math.random() * (2 - 0 + 1) + 0);
 		
@@ -22,11 +21,6 @@ public class ComputerPlayerB extends Player{
 		}else {
 			play( game );
 		}
-	}
-	
-
-	public char getMark() {
-		return this.mark;
 	}
 	
 }
